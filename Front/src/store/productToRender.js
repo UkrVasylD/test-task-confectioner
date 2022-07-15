@@ -34,6 +34,18 @@ export default {
         (item) => item._id !== productId
       );
     },
+    sortProductPriceDescending(state) {
+      state.productList = state.productList.sort((a, b) => (a.price > b.price ? -1 : 1))
+    },
+    sortProductPriceAscending(state) {
+      state.productList = state.productList.sort((a, b) => (a.price > b.price ? 1 : -1))
+    },
+    sortProductTitleLow(state) {
+      state.productList = state.productList.sort((a, b) => (a.title > b.title ? -1 : 1))
+    },
+    sortProductTitleUp(state) {
+      state.productList = state.productList.sort((a, b) => (a.title > b.title ? 1 : -1))
+    },
   },
   actions: {
     loadProduct({ commit }, searchProduct) {
@@ -185,6 +197,18 @@ export default {
             () => commit("setLoading", false)
           );
       });
+    },
+    sortProductPriceAscending({ commit }) {
+      commit("sortProductPriceAscending");
+    },
+    sortProductPriceDescending({ commit }) {
+      commit("sortProductPriceDescending");
+    },
+    sortProductTitleLow({ commit }) {
+      commit("sortProductTitleLow");
+    },
+    sortProductTitleUp({ commit }) {
+      commit("sortProductTitleUp");
     },
   },
 };

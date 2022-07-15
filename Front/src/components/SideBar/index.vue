@@ -49,6 +49,34 @@
     <div>
       <button @click="onSearch">Пошук</button>
     </div>
+    <div>
+      <h2>Сортування</h2>
+      <div>
+        <label>
+          <p>За ціною</p>
+          <select
+            v-model="sortPriceSelectValue"
+            @change="sortByPrice(sortPriceSelectValue)"
+          >
+            <option :value="true">Спадання ціни</option>
+            <option :value="false">Зростання ціни</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>
+          <p>За назвою</p>
+          <select
+            v-model="sortTitleSelectValue"
+            @change="sortByTitle(sortTitleSelectValue)"
+          >
+            <option :value="true">Я - А</option>
+            <option :value="false">А - Я</option>
+          </select>
+        </label>
+      </div>
+      <!-- <button @click="sort()"></button> -->
+    </div>
   </div>
 </template>
 
@@ -64,11 +92,19 @@ export default {
       menuListObj,
       product: {},
       productModel: null,
+      sortPriceSelectValue: null,
+      sortTitleSelectValue: null,
     };
   },
 
   methods: {
-    ...mapActions("productToRender", ["loadProduct"]),
+    ...mapActions("productToRender", [
+      "loadProduct",
+      "sortProductPriceAscending",
+      "sortProductPriceDescending",
+      "sortProductTitleLow",
+      "sortProductTitleUp",
+    ]),
 
     setProductModel(val) {
       this.productModel = val;
@@ -83,11 +119,23 @@ export default {
       }
       try {
         await this.loadProduct(this.product);
-        console.log("this.product");
-
-        console.log(this.product);
       } catch (err) {
         console.log(err);
+      }
+    },
+
+    sortByPrice(value) {
+      if (value) {
+        this.sortProductPriceDescending();
+      } else {
+        this.sortProductPriceAscending();
+      }
+    },
+    sortByTitle(value) {
+      if (value) {
+        this.sortProductTitleLow();
+      } else {
+        this.sortProductTitleUp();
       }
     },
   },
@@ -100,12 +148,12 @@ export default {
   max-width: 300px;
   background-color: rgb(58, 54, 59);
   color: azure;
-  height: 300px;
+  height: 600px;
 
   div {
     padding: 3% 0 0 5px;
     display: grid;
-    grid-auto-flow: column;
+    grid-auto-flow: row;
     input {
       border: solid 2px blue;
       border-radius: 3px;
@@ -115,6 +163,7 @@ export default {
       border: solid 2px blue;
       border-radius: 3px;
       background-color: bisque;
+      width: 75%;
     }
 
     button {
@@ -127,6 +176,8 @@ export default {
     }
   }
   .filter-price {
+    grid-auto-flow: column;
+
     padding: 20px 0 0 0;
     input {
       margin: 0 auto;

@@ -148,6 +148,8 @@ export default {
       display: grid;
       grid-column-start: 2;
       grid-column-end: 3;
+      font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
     }
     .login {
       display: grid;

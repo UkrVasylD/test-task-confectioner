@@ -22,9 +22,18 @@ export default {
     ProductItem,
     SideBar,
   },
-
+  data() {
+    return {
+      ProductList: [],
+    };
+  },
   computed: {
     ...mapGetters("productToRender", ["getProductList"]),
+
+    // ProductList() {
+    //   this.ProductList = this.getProductList;
+    //   return this.ProductList;
+    // },
   },
 
   methods: {
