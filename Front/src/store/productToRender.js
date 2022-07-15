@@ -60,6 +60,9 @@ export default {
             title: searchProduct.title,
             minPrice: searchProduct.minPrice,
             maxPrice: searchProduct.maxPrice,
+            sortPrice: searchProduct.sortPrice,
+            sortTitle: searchProduct.sortTitle,
+
           },
         }) //Асинхронна дія
         .then(

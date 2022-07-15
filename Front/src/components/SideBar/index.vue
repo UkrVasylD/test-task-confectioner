@@ -47,9 +47,6 @@
     </div>
 
     <div>
-      <button @click="onSearch">Пошук</button>
-    </div>
-    <div>
       <h2>Сортування</h2>
       <div>
         <label>
@@ -58,8 +55,8 @@
             v-model="sortPriceSelectValue"
             @change="sortByPrice(sortPriceSelectValue)"
           >
-            <option :value="true">Спадання ціни</option>
-            <option :value="false">Зростання ціни</option>
+            <option :value="-1">Спадання ціни</option>
+            <option :value="1">Зростання ціни</option>
           </select>
         </label>
       </div>
@@ -70,12 +67,15 @@
             v-model="sortTitleSelectValue"
             @change="sortByTitle(sortTitleSelectValue)"
           >
-            <option :value="true">Я - А</option>
-            <option :value="false">А - Я</option>
+            <option :value="-1">Я - А</option>
+            <option :value="1">А - Я</option>
           </select>
         </label>
       </div>
       <!-- <button @click="sort()"></button> -->
+    </div>
+    <div>
+      <button @click="onSearch">Пошук</button>
     </div>
   </div>
 </template>
@@ -115,7 +115,7 @@ export default {
       if (this.product.minPrice > this.product.maxPrice) {
         let min = this.product.maxPrice;
         this.product.minPrice = this.product.minPrice;
-        this.product.minPrice = min;
+        this.product.minPrice = sortTitleSelectValue;
       }
       try {
         await this.loadProduct(this.product);
@@ -125,14 +125,21 @@ export default {
     },
 
     sortByPrice(value) {
-      if (value) {
+      this.product.sortPrice = value;
+      console.log("this.produc");
+      console.log(this.product);
+
+      if (value === 1) {
         this.sortProductPriceDescending();
       } else {
         this.sortProductPriceAscending();
       }
     },
     sortByTitle(value) {
-      if (value) {
+      console.log("this.produc");
+      console.log(this.product);
+      this.product.sortTitle = value;
+      if (value === 1) {
         this.sortProductTitleLow();
       } else {
         this.sortProductTitleUp();

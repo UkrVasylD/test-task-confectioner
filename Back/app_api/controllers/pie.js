@@ -17,8 +17,12 @@ module.exports.getList = function (req, res) {
       $lte: req.query.maxPrice || Infinity,
     };
   }
-
-  PieModel.find(searchObj, function (err, pie) {
+  PieModel.find(searchObj).
+  limit(6).
+  sort({price:searchObj.sortPrice}).
+  sort({title:searchObj.sortTitle}). 
+    exec(
+      function (err, pie) {
     if (err)
       return sendJSONResponse(res, 500, {
         success: false,
@@ -35,8 +39,9 @@ module.exports.getList = function (req, res) {
       }
       let base64 = "data:" + mineType.lookup(path) + ";base64," + photoBase64;
       item.photo = base64;
-    });
-
+    }
+    )
+    
     sendJSONResponse(res, 200, { success: true, data: pie });
   });
 };
