@@ -3,7 +3,7 @@
     <side-bar />
     <div class="ProductList-wraper">
       <product-item
-        v-for="product in getProductList"
+        v-for="product in ProductList"
         :key="product.id"
         :productItem="product"
       />
@@ -24,11 +24,17 @@ export default {
   },
   data() {
     return {
-      ProductList: [],
+      // ProductList: [],
     };
   },
   computed: {
     ...mapGetters("productToRender", ["getProductList"]),
+    ...mapGetters("favorite", ["getFavoriteList"]),
+
+    ProductList() {
+      if (this.$route.path !== "/product/favorite") return this.getProductList;
+      if (this.$route.path === "/product/favorite") return this.getFavoriteList;
+    },
 
     // ProductList() {
     //   this.ProductList = this.getProductList;
@@ -39,15 +45,17 @@ export default {
   methods: {
     ...mapActions("productToRender", ["loadProduct"]),
   },
-
   async mounted() {
-    try {
-      let category = this.$route.params.category;
-      let type = this.$route.params.type;
+    if (this.$route.path !== "/product/favorite") {
+      try {
+        console.log(this.$route.path);
+        let category = this.$route.params.category;
+        let type = this.$route.params.type;
 
-      await this.loadProduct({ category: category, type: type });
-    } catch (err) {
-      console.log(err);
+        await this.loadProduct({ category: category, type: type });
+      } catch (err) {
+        console.log(err);
+      }
     }
   },
 };

@@ -34,10 +34,6 @@ const store = {
         if (authData.type === "admin") state.access = true
         else state.access = false
 
-        console.log("authData");
-        console.log(authData.type);
-    console.log(state.access);
-
       localStorage.setItem('authData', JSON.stringify(state.authData))
       localStorage.setItem('expiresAt', JSON.stringify(state.expiresAt))
     },

@@ -7,6 +7,13 @@
       {{ productItem.title }}
     </div>
     <div class="product-price">{{ productItem.price }} грн.</div>
+    <div @click="add_delToFavorite(productItem)">
+      Add to favorite
+      <div
+        class="favorite-circle-gray"
+        :class="{ 'favorite-circle-green': isActive }"
+      ></div>
+    </div>
     <div>
       <button @click="addToCart(productItem)">Add to cart</button>
       <button v-if="getAccessStatus" @click="edit(productItem._id)">
@@ -29,11 +36,40 @@ export default {
     },
   },
 
+  data() {
+    return {
+      // isActive: false,
+    };
+  },
   computed: {
     ...mapGetters("auth", ["getAccessStatus"]),
+    ...mapGetters("favorite", ["getFavoriteList"]),
+
+    isActive() {
+      let favoriteItem = this.getFavoriteList.find(
+        (item) => item.productId === this.productItem._id
+      );
+      if (favoriteItem) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
     ...mapActions("cart", ["addToCart"]),
+    ...mapActions("favorite", ["addToFavorite", "del"]),
+
+    add_delToFavorite(productItem) {
+      const indexItem = this.getFavoriteList.find(
+        (item) => item.productId === productItem._id
+      );
+      if (indexItem) {
+        this.del(productItem._id);
+      } else {
+        this.addToFavorite(productItem);
+      }
+    },
 
     edit(id) {
       this.$router.push({ name: "editor", params: { id: id } });
@@ -55,7 +91,20 @@ export default {
   border-radius: 5%;
   background-color: beige;
   max-width: 250px;
-
+  .favorite-circle-gray {
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: gray;
+  }
+  .favorite-circle-green {
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: green;
+  }
   button {
     background-color: rgb(214, 241, 191);
     margin: 0 5%;

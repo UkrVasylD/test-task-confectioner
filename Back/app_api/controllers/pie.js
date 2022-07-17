@@ -17,7 +17,11 @@ module.exports.getList = function (req, res) {
       $lte: req.query.maxPrice || Infinity,
     };
   }
+  if (searchObj.title) {
+    searchObj.title =  { $regex: searchObj.title}
+  }
   PieModel.find(searchObj).
+  // find({ title: { $regex: searchObj.title} }).
   limit(6).
   sort({price:searchObj.sortPrice}).
   sort({title:searchObj.sortTitle}). 

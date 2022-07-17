@@ -1,6 +1,15 @@
 <template>
   <div class="side-bar">
     <div>
+      <button
+        @click="
+          $router.push({ name: 'product', params: { category: 'favorite' } })
+        "
+      >
+        Обрані
+      </button>
+    </div>
+    <div>
       <label>
         Категорія
         <select
@@ -126,9 +135,6 @@ export default {
 
     sortByPrice(value) {
       this.product.sortPrice = value;
-      console.log("this.produc");
-      console.log(this.product);
-
       if (value === 1) {
         this.sortProductPriceDescending();
       } else {
@@ -136,8 +142,6 @@ export default {
       }
     },
     sortByTitle(value) {
-      console.log("this.produc");
-      console.log(this.product);
       this.product.sortTitle = value;
       if (value === 1) {
         this.sortProductTitleLow();
@@ -155,7 +159,7 @@ export default {
   max-width: 300px;
   background-color: rgb(58, 54, 59);
   color: azure;
-  height: 600px;
+  height: auto;
 
   div {
     padding: 3% 0 0 5px;
@@ -178,7 +182,7 @@ export default {
       color: black;
       padding: 1% 5%;
       border-radius: 15px;
-      margin: 0 auto;
+      margin: 10px auto;
       max-width: 50%;
     }
   }

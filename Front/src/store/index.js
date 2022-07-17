@@ -4,6 +4,8 @@ import cart from "./cart";
 import popUp from "./popUp";
 import auth from "./auth";
 import order from "./order";
+import favorite from "./favorite";
+
 
 
 export default createStore({
@@ -18,5 +20,6 @@ export default createStore({
     popUp,
     auth,
     order,
+    favorite,
   },
 });
