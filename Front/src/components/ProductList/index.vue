@@ -35,11 +35,6 @@ export default {
       if (this.$route.path !== "/product/favorite") return this.getProductList;
       if (this.$route.path === "/product/favorite") return this.getFavoriteList;
     },
-
-    // ProductList() {
-    //   this.ProductList = this.getProductList;
-    //   return this.ProductList;
-    // },
   },
 
   methods: {

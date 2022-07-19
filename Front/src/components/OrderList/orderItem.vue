@@ -8,7 +8,20 @@
         {{ order.time }}
       </div>
       <div>{{ order.totalPrice }} грн.</div>
-
+      <div v-for="(value, nameObj, index) in orderItemsList" :key="index">
+        <div>
+          {{ value }}
+        </div>
+        <div>
+          {{ nameObj }}
+        </div>
+        <div>
+          {{ value.price }}
+        </div>
+        <div>
+          {{ value.title }}
+        </div>
+      </div>
       <div>
         <input
           class="input_weight"
@@ -28,12 +41,12 @@ import { mapActions } from "vuex";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "OrderList",
+  name: "OrderItem",
 
   data() {
     return {
       order: {},
-      orderItems: [],
+      orderItemsList: [],
     };
   },
   computed: {
@@ -52,15 +65,22 @@ export default {
       } catch (err) {
         console.log(err);
       }
-      try {
-        console.log("this.order.orderProductIdArr.length");
-        console.log(this.order.orderProductIdArr[0].length);
 
-        await this.order.orderProductIdArr.forEach((element) => {
+      try {
+        // console.log("this.order.orderProductIdArr.length");
+        // console.log(this.order.orderProductIdArr[0].length);
+        // let a = this.order.orderProductIdArr[0].split(",");
+        // console.log(a);
+        this.order.orderProductIdArr[0].split(",").forEach((element) => {
+          console.log("element");
           console.log(element);
+
           let prod = this.getProductById(element);
-          this.orderItems.push(prod);
-          console.log(this.orderItems);
+          console.log("prod");
+          console.log(prod);
+          this.orderItemsList.push(prod);
+          console.log("this.orderItems");
+          console.log(this.orderItemsList);
         });
       } catch (err) {
         console.log(err);

@@ -157,6 +157,7 @@ export default {
             (res) => res.data
           )
           .then((resData) => {
+            console.log(resData.data);
             if (resData.success) resolve(resData.data);
             else throw new Error("Fatch failed!");
           })
