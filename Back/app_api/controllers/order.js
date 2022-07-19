@@ -23,21 +23,31 @@ module.exports.getList = function (req, res) {
 
 module.exports.add = function (req, res, next) {
   let num = 0;
-  let pie;
+  let order;
   const form = formidable({ multiples: true });
-  form
-    .parse(req, (err, fields, files) => {
-      if (err) {
-        next(err);
-        return;
-      }
-      order = new OrderModel({
-        time: fields.time,
-        orderProductIdArr: fields.order,
-        totalPrice: parseFloat(fields.totalPrice),
-      });
-    })
-    
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    order = new OrderModel({
+      time: fields.time,
+      // orderProductIdArr: fields.order,
+      totalPrice: parseFloat(fields.totalPrice),
+    });
+    let idArr;
+    idArr = fields.order.split(",");
+    console.log(idArr);
+    console.log(idArr.length);
+    for (let index = 0; index < idArr.length; index++) {
+      const element = idArr[index];
+      order.orderProductIdArr.push(element);
+    }
+    // order.orderProductIdArr.push(fields.order);
+    console.log("order.orderProductIdArr");
+    console.log(order);
+  });
+
   form.on("end", function (d) {
     num++;
     if (num == 1) {

@@ -1,61 +1,61 @@
-const mongoose = require('mongoose')
-const crypto = require('crypto')
+const mongoose = require("mongoose");
+const crypto = require("crypto");
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
   email: {
     type: String,
- minlength:3,
- maxlength:45,
- required:true,
-   },
+    minlength: 3,
+    maxlength: 45,
+    required: true,
+  },
   name: {
     type: String,
- minlength:3,
- maxlength:25,
- required:true,
- lowercase:true,
- trim:true,
-   },
+    minlength: 3,
+    maxlength: 25,
+    required: true,
+    lowercase: true,
+    trim: true,
+  },
   type: {
     type: String,
- minlength:3,
- maxlength:25,
- required:true,
- enum:['admin', 'user'],
- default:'user'
-   } ,
+    minlength: 3,
+    maxlength: 25,
+    required: true,
+    enum: ["admin", "user"],
+    default: "user",
+  },
   hash: {
     type: String,
- minlength:3,
- maxlength:145,
- required:true,
-   }, 
+    minlength: 3,
+    maxlength: 1245,
+    required: true,
+  },
   salt: {
     type: String,
- minlength:3,
- maxlength:145,
- required:true,
-   }, 
-})
+    minlength: 3,
+    maxlength: 145,
+    required: true,
+  },
+});
 
 //--------------- Функція для формування хешу пароля -----------------
 UsersSchema.methods.setPassword = function (password) {
-  this.salt = crypto.randomBytes(16).toString('hex')
+  this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
-    .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
-    .toString('hex')
-}
+    .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+    .toString("hex");
+};
 
 //---------------- Функція для перевірки правильності пароля ------------
 UsersSchema.methods.validPassword = function (password) {
   //----------- Формуємо хеш переданого (для перевірки) пароля ----
   const hash = crypto
-    .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
-    .toString('hex')
+    .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+    .toString("hex");
   //------------ Перевіряємо, чи одержано такий же хеш як у базі -------------
-  return this.hash === hash
-}
+  return this.hash === hash;
+};
 
-module.exports = mongoose.model('Users', UsersSchema)
+module.exports = mongoose.model("Users", UsersSchema);

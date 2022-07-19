@@ -62,16 +62,7 @@ export default {
     if (this.$route.params.id) {
       try {
         this.order = await this.getOrderById(this.$route.params.id);
-      } catch (err) {
-        console.log(err);
-      }
-
-      try {
-        // console.log("this.order.orderProductIdArr.length");
-        // console.log(this.order.orderProductIdArr[0].length);
-        // let a = this.order.orderProductIdArr[0].split(",");
-        // console.log(a);
-        this.order.orderProductIdArr[0].split(",").forEach((element) => {
+        this.order.orderProductIdArr.forEach((element) => {
           console.log("element");
           console.log(element);
 
@@ -82,9 +73,26 @@ export default {
           console.log("this.orderItems");
           console.log(this.orderItemsList);
         });
+        console.log(this.order);
       } catch (err) {
         console.log(err);
       }
+
+      // try {
+      //   this.order.orderProductIdArr.forEach((element) => {
+      //     console.log("element");
+      //     console.log(element);
+
+      //     let prod = this.getProductById(element);
+      //     console.log("prod");
+      //     console.log(prod);
+      //     this.orderItemsList.push(prod);
+      //     console.log("this.orderItems");
+      //     console.log(this.orderItemsList);
+      //   });
+      // } catch (err) {
+      //   console.log(err);
+      // }
     }
   },
 };

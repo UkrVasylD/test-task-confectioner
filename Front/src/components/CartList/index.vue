@@ -41,9 +41,10 @@ export default {
         }
         let orderData = {
           order: prodIdArr,
-          time: new Date(),
+          // time: new Date(),
           totalPrice: this.getTotalPrice,
         };
+        console.log(orderData.order);
         await this.addOrder(orderData);
         alert(`Ваше замовлення на суму ${this.getTotalPrice} грн прийняте`);
         this.$router.push({ name: "product" });
