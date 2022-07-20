@@ -1,36 +1,22 @@
 <template>
-  <div class="CartItem-container">
+  <div>
+    <div>{{ order.totalPrice }} грн.</div>
+
     <div class="CartItem-container">
-      <div>
-        <!-- <img :src="cartItem.productPhoto" alt="" /> -->
-      </div>
-      <div>
-        {{ order.time }}
-      </div>
-      <div>{{ order.totalPrice }} грн.</div>
       <div v-for="(value, nameObj, index) in orderItemsList" :key="index">
         <div>
-          {{ value }}
-        </div>
-        <div>
-          {{ nameObj }}
+          <img :src="value.photo" alt="" />
         </div>
         <div>
           {{ value.price }}
         </div>
         <div>
+          {{ nameObj }}
+        </div>
+
+        <div>
           {{ value.title }}
         </div>
-      </div>
-      <div>
-        <input
-          class="input_weight"
-          v-model="order"
-          type="number"
-          min="1"
-          max="99"
-        />
-        кг
       </div>
     </div>
   </div>
@@ -62,37 +48,17 @@ export default {
     if (this.$route.params.id) {
       try {
         this.order = await this.getOrderById(this.$route.params.id);
-        this.order.orderProductIdArr.forEach((element) => {
-          console.log("element");
-          console.log(element);
+        console.log("this.order.orderProductIdArr");
+        console.log(this.order.orderProductIdArr);
 
-          let prod = this.getProductById(element);
-          console.log("prod");
-          console.log(prod);
+        for (const item of this.order.orderProductIdArr) {
+          let prod = await this.getProductById(item._id);
+
           this.orderItemsList.push(prod);
-          console.log("this.orderItems");
-          console.log(this.orderItemsList);
-        });
-        console.log(this.order);
+        }
       } catch (err) {
         console.log(err);
       }
-
-      // try {
-      //   this.order.orderProductIdArr.forEach((element) => {
-      //     console.log("element");
-      //     console.log(element);
-
-      //     let prod = this.getProductById(element);
-      //     console.log("prod");
-      //     console.log(prod);
-      //     this.orderItemsList.push(prod);
-      //     console.log("this.orderItems");
-      //     console.log(this.orderItemsList);
-      //   });
-      // } catch (err) {
-      //   console.log(err);
-      // }
     }
   },
 };
@@ -101,5 +67,27 @@ export default {
 <style lang="scss" scoped>
 .table-order td {
   border: solid 2px black;
+}
+.CartItem-container {
+  max-width: 75vw;
+  display: grid;
+  // grid-auto-flow: column;
+  grid-template-columns: 2fr 5fr 2fr 2fr 3fr repeat(2, 2fr);
+  justify-items: center;
+  align-items: center;
+  margin: 20px;
+  padding: 10px;
+  border: 2px solid blue;
+  background-color: rgba(24, 181, 164, 0.75);
+  .input_weight {
+    width: 50px;
+    background-color: rgba(21, 143, 131, 0.75);
+    border-radius: 25%;
+    padding-left: 5px;
+    text-align: center;
+  }
+  img {
+    width: 50px;
+  }
 }
 </style>
