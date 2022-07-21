@@ -31,21 +31,24 @@ module.exports.add = function (req, res, next) {
       return;
     }
     order = new OrderModel({
-      time: fields.time,
+      buyerId: fields.buyerId,
       // orderProductIdArr: fields.order,
       totalPrice: parseFloat(fields.totalPrice),
     });
     let idArr;
     idArr = fields.order.split(",");
-    console.log(idArr);
-    console.log(idArr.length);
+    let countArr;
+    countArr = fields.prodCount.split(",");
     for (let index = 0; index < idArr.length; index++) {
-      const element = idArr[index];
+      const _id = idArr[index];
+      const count = countArr[index];
+      const element = {
+        _id: _id,
+        count: count,
+      };
+
       order.orderProductIdArr.push(element);
     }
-    // order.orderProductIdArr.push(fields.order);
-    console.log("order.orderProductIdArr");
-    console.log(order);
   });
 
   form.on("end", function (d) {
@@ -67,14 +70,16 @@ module.exports.add = function (req, res, next) {
 };
 
 module.exports.getById = function (req, res) {
-  OrderModel.findById(req.params.id, function (err, searchOrder) {
-    if (err) {
-      sendJSONResponse(res, 500, {
-        success: false,
-        err: { msg: "Find product faild!" },
-      });
-      return;
-    }
-    sendJSONResponse(res, 200, { success: true, data: searchOrder });
-  });
+  OrderModel.findById(req.params.id)
+    .populate("buyerId")
+    .exec(function (err, searchOrder) {
+      if (err) {
+        sendJSONResponse(res, 500, {
+          success: false,
+          err: { msg: "Find product faild!" },
+        });
+        return;
+      }
+      sendJSONResponse(res, 200, { success: true, data: searchOrder });
+    });
 };

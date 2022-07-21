@@ -76,6 +76,7 @@ module.exports.login = function (req, res) {
         result: "Authorized",
         user: {
           authData: {
+            _id: user._id,
             name: user._doc.name,
             type: user.type,
             access_token: token,
@@ -88,3 +89,66 @@ module.exports.login = function (req, res) {
       return res.status(401).json({ error: "Login error" });
     });
 };
+
+module.exports.update = function (req, res, next) {
+  // let num = 0;
+  let favoriteList = [];
+  console.log("req.body");
+  console.log(req.body);
+  console.log(req.body.favoriteListId.length);
+
+  for (let index = 0; index < req.body.favoriteListId.length; index++) {
+    const _id = req.body.favoriteListId[index];
+    console.log(_id);
+    console.log(req.body.favoriteListId[index]);
+
+    favoriteList.push({ _id: _id });
+    console.log(favoriteList);
+  }
+  console.log("favoriteList");
+  console.log(favoriteList);
+  console.log(req.body.userId);
+  // const form = formidable({ multiples: true });
+  // form
+  //   .parse(req, (err, fields, files) => {
+  //     if (err) {
+  //       next(err);
+  //       return;
+  //     }
+  //     user = {
+  //       favoriteList: fields.favoriteList,
+  //     };
+  //     req.body.id = fields._id;
+  //     req.body.user = user;
+  //   })
+  //   .on("fileBegin", function (name, file) {
+  //     file.filepath = req.imagesDir + "/images/" + "\\" + file.originalFilename;
+  //   });
+
+  // form.on("end", function (d) {
+  //   num++;
+  //   if (num == 1) {
+  //     //Збереження моделі і відключення від бази даних
+  UsersModel.findByIdAndUpdate(
+    req.body.userId,
+    {
+      favoriteList: favoriteList,
+    },
+
+    { new: true },
+    function (err) {
+      // mongoose.disconnect()
+      if (err) {
+        sendJSONResponse(res, 500, {
+          success: false,
+          err: { msg: "Update faild!" },
+        });
+        return;
+      }
+
+      sendJSONResponse(res, 200, { success: true });
+    }
+  );
+};
+//   });
+// };

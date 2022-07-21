@@ -43,7 +43,6 @@ export default {
   async mounted() {
     if (this.$route.path !== "/product/favorite") {
       try {
-        console.log(this.$route.path);
         let category = this.$route.params.category;
         let type = this.$route.params.type;
 

@@ -8,6 +8,10 @@ const orderScheme = new Schema({
     min: 1,
     max: 100000,
   },
+  buyerId: {
+    type: Schema.Types.ObjectId,
+    ref: "Users",
+  },
   orderProductIdArr: [
     {
       _id: {

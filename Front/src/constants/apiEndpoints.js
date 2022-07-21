@@ -10,11 +10,11 @@ export default {
     usersList: `${process.env.VUE_APP_API_URL}/users`,
     signup: `${process.env.VUE_APP_API_URL}/users/signup`,
     login: `${process.env.VUE_APP_API_URL}/users/login`,
+    update: `${process.env.VUE_APP_API_URL}/users`,
   },
   order: {
     add: `${process.env.VUE_APP_API_URL}/order`,
     readList: `${process.env.VUE_APP_API_URL}/order`,
     getOrderById: (id) => `${process.env.VUE_APP_API_URL}/order/${id}`,
-
   },
 };

@@ -26,6 +26,15 @@ const UsersSchema = new Schema({
     enum: ["admin", "user"],
     default: "user",
   },
+  favoriteList: [
+    {
+      _id: {
+        type: Schema.Types.ObjectId,
+        ref: "Pie",
+      },
+      // default: [],
+    },
+  ],
   hash: {
     type: String,
     minlength: 3,

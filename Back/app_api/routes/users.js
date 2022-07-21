@@ -1,15 +1,14 @@
-var express = require('express')
-var router = express.Router()
+var express = require("express");
+var router = express.Router();
 
-const usersController = require('../controllers/users')
+const usersController = require("../controllers/users");
 
-/* GET список книг. */
-router.get('/', usersController.getList)
+router.get("/", usersController.getList);
 
-/* GET видалення книги за id. */
-router.post('/signup', usersController.signup)
+router.post("/signup", usersController.signup);
 
-/* POST Створення нової книги. */
-router.post('/login', usersController.login)
+router.post("/login", usersController.login);
 
-module.exports = router
+router.put("/", usersController.update);
+
+module.exports = router;

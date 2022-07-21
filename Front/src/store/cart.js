@@ -3,8 +3,8 @@ export default {
   state: {
     cartList: [],
 
-    loading: false, 
-    error: false, 
+    loading: false,
+    error: false,
   },
   getters: {
     isLoading: (state) => state.loading,
@@ -51,9 +51,9 @@ export default {
 
     addToCart(state, product) {
       const indexItem = state.cartList.findIndex(
-        (item) => item.productId === product._id
+        (item) => item.productId == product._id
       );
-      if (indexItem > 0) {
+      if (indexItem >= 0) {
         state.cartList[indexItem].count++;
       } else {
         const cartProduct = {
@@ -88,6 +88,5 @@ export default {
     addToCart({ commit }, product) {
       commit("addToCart", product);
     },
-
-  }
+  },
 };

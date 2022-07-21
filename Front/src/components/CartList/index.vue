@@ -25,6 +25,7 @@ export default {
 
   computed: {
     ...mapGetters("cart", ["getCartList", "getTotalPrice"]),
+    ...mapGetters("auth", ["getUserId"]),
   },
   methods: {
     ...mapActions("order", ["addOrder"]),
@@ -35,16 +36,18 @@ export default {
         let prodCountArr = [];
         for (let index = 0; index < this.getCartList.length; index++) {
           const element = this.getCartList[index].productId;
-          const coutn = this.getCartList[index].productId.count;
+          const coutn = this.getCartList[index].count;
+
           prodIdArr.push(element);
           prodCountArr.push(coutn);
         }
         let orderData = {
           order: prodIdArr,
-          // time: new Date(),
+          prodCount: prodCountArr,
           totalPrice: this.getTotalPrice,
+          buyerId: this.getUserId,
         };
-        console.log(orderData.order);
+
         await this.addOrder(orderData);
         alert(`Ваше замовлення на суму ${this.getTotalPrice} грн прийняте`);
         this.$router.push({ name: "product" });

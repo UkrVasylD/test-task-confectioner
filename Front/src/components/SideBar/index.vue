@@ -3,7 +3,8 @@
     <div>
       <button
         @click="
-          $router.push({ name: 'product', params: { category: 'favorite' } })
+          updateFavoriteList();
+          $router.push({ name: 'product', params: { category: 'favorite' } });
         "
       >
         Обрані
@@ -105,6 +106,10 @@ export default {
       sortTitleSelectValue: null,
     };
   },
+  computed: {
+    ...mapGetters("auth", ["getUserId"]),
+    ...mapGetters("favorite", ["getFavoriteList"]),
+  },
 
   methods: {
     ...mapActions("productToRender", [
@@ -114,7 +119,19 @@ export default {
       "sortProductTitleLow",
       "sortProductTitleUp",
     ]),
-
+    ...mapActions("favorite", ["updateUserFavoriteList"]),
+    updateFavoriteList() {
+      console.log(111111111);
+      let favoriteListId = [];
+      for (const iterator of this.getFavoriteList) {
+        favoriteListId.push(iterator.productId);
+      }
+      this.getFavoriteList,
+        this.updateUserFavoriteList({
+          userId: this.getUserId,
+          favoriteListId,
+        });
+    },
     setProductModel(val) {
       this.productModel = val;
       this.product.category = this.menuListObj[val].category;
