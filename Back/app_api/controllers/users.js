@@ -77,6 +77,7 @@ module.exports.login = function (req, res) {
         user: {
           authData: {
             _id: user._id,
+            favoriteIdList:user.favoriteList,
             name: user._doc.name,
             type: user.type,
             access_token: token,

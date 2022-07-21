@@ -49,8 +49,8 @@
             />
           </div>
           <div class="form-group error" v-if="message">{{ message }}</div>
-          <button class="btn-login" @click="submit">Login</button>
-          <button class="btn-login" @click="onClick">Sign up</button>
+          <button class="btn-login" @click="submit()">Login</button>
+          <button class="btn-login" @click="onClick()">Sign up</button>
 
           <div>
             <label>

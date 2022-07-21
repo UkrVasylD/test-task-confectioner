@@ -41,8 +41,8 @@
             />
           </div>
           <div class="form-group error" v-if="message">{{ message }}</div>
-          <button class="btn-login" @click="submit">Login</button>
-          <button class="btn-login" @click="onClick">Sign up</button>
+          <button class="btn-login" @click="wraper()">Login</button>
+          <button class="btn-login" @click="onClick()">Sign up</button>
 
           <div>
             <label>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -78,9 +78,13 @@ export default {
       message: "",
     };
   },
-
+  computed: {
+    ...mapGetters("auth", ["getFavoriteIdList"]),
+  },
   methods: {
     ...mapActions("auth", ["login", "logout"]),
+    ...mapActions("favorite", ["addToFavorite"]),
+    ...mapActions("productToRender", ["getProductById"]),
 
     async submit() {
       try {
@@ -98,6 +102,21 @@ export default {
         this.message = err.response.data.error;
       }
       this.$router.push({ name: "home" });
+    },
+
+    async setFavoriteList() {
+      try {
+        for (const item of this.getFavoriteIdList) {
+          let prod = await this.getProductById(item._id);
+          this.addToFavorite(prod);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async wraper() {
+      await this.submit();
+      await this.setFavoriteList();
     },
     onClick() {
       this.$router.push({ name: "signup" });

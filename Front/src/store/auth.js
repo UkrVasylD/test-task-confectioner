@@ -1,4 +1,3 @@
-// import { createStore } from 'vuex'
 import axios from "axios";
 import apiEndpoints from "@/constants/apiEndpoints";
 
@@ -13,6 +12,8 @@ const store = {
   getters: {
     usersList: (state) => state.usersList,
     getUserId: (state) => state.authData._id,
+    getFavoriteIdList: (state) => state.authData.favoriteIdList,
+
     isAuthenticated: (state) => () => {
       return state.authData && new Date().getTime() < state.expiresAt;
     },
