@@ -7,14 +7,14 @@ const UsersSchema = new Schema({
   email: {
     type: String,
     minlength: 3,
-    maxlength: 45,
+    maxlength: 320,
     required: true,
   },
   name: {
     type: String,
     minlength: 3,
     maxlength: 25,
-    required: true,
+    required: [true,'min 3 simbol'],
     lowercase: true,
     trim: true,
   },
@@ -49,7 +49,6 @@ const UsersSchema = new Schema({
   },
 });
 
-//--------------- Функція для формування хешу пароля -----------------
 UsersSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
@@ -57,13 +56,10 @@ UsersSchema.methods.setPassword = function (password) {
     .toString("hex");
 };
 
-//---------------- Функція для перевірки правильності пароля ------------
 UsersSchema.methods.validPassword = function (password) {
-  //----------- Формуємо хеш переданого (для перевірки) пароля ----
   const hash = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
     .toString("hex");
-  //------------ Перевіряємо, чи одержано такий же хеш як у базі -------------
   return this.hash === hash;
 };
 

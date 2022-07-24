@@ -21,16 +21,37 @@ module.exports.getList = function (req, res) {
 };
 
 module.exports.signup = function (req, res) {
+  if (!req.body.email) {
+    return res.status(401).json({ error: "Email is required" });
+  }
+  const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+  if (!req.body.email.match(pattern) || req.body.email.length<3 || req.body.email.length>320) {
+    return res.status(400).json({ error: "Email is entered incorrectly" });
+  } 
+  if (!req.body.name) {
+    return res.status(400).json({ error: "Name is required" });
+  }
+  if (req.body.name.length<3 || req.body.name.length>25) {
+    return res.status(400).json({ error: "Name is entered incorrectly" });
+  } 
+  if (!req.body.password) {
+    return res.status(400).json({ error: "Password is required" });
+  }
+  if ( req.body.password.length>16) {
+    return res.status(400).json({ error: "Password is entered incorrectly" });
+  } 
   var user = new UsersModel({
     email: req.body.email,
     name: req.body.name,
     type: "user",
   });
-  console.log(user);
   user.setPassword(req.body.password);
+
   user
     .save()
     .then((user) => {
+      console.log(user);
       const token = prepareToken(
         {
           id: user._id,

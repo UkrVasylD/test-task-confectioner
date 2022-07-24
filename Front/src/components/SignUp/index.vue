@@ -6,14 +6,13 @@
       <hr />
 
       <div v-if="message">{{ message }}</div>
-
       <label for="email"><b>Email</b></label>
       <input
         type="text"
         placeholder="Enter Email"
         name="email"
         required
-        maxlength="15"
+        maxlength="320"
         v-model="email"
       />
 
@@ -23,8 +22,9 @@
         placeholder="Enter Name"
         name="name"
         required
-        maxlength="15"
-        v-model="userMame"
+        minlength="3"
+        maxlength="25"
+        v-model="userName"
       />
 
       <label for="psw"><b>Password</b></label>
@@ -63,8 +63,8 @@
       </p>
 
       <div class="clearfix">
-        <button class="cancelbtn" @click="goToRoutName">Cancel</button>
-        <button class="signupbtn" @click="submit">Sign Up</button>
+        <button class="cancelbtn" @click="goToRoutName()">Cancel</button>
+        <button class="signupbtn" @click="submit()">Sign Up</button>
       </div>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
   name: "SignUp",
   data() {
     return {
-      userMame: "",
+      userName: "",
       email: "",
       password: "",
       message: "",
@@ -89,15 +89,20 @@ export default {
     goToRoutName() {
       this.$router.push({ name: "home" });
     },
+
     async submit() {
-      if (this.password === this.repeatPassword) {
+      const valName = await this.validName();
+      let validPass = await this.validPassword();
+      const valEmail = await this.validEmail();
+      if (validPass && valName && valEmail) {
         try {
           const user = {
-            name: this.userMame,
+            name: this.userName,
             email: this.email,
             password: this.password,
           };
           const result = await this.signup(user);
+
           if (result === true) {
             this.message = "";
             this.$router.push({
@@ -110,9 +115,36 @@ export default {
         } catch (err) {
           this.message = err.message;
         }
-      } else {
-        alert("Помилка пароля");
       }
+    },
+    validPassword() {
+      if (this.password !== this.repeatPassword) {
+        this.message = "Помилка пароля";
+        alert("Помилка пароля");
+        return false;
+      } else if (this.password.length > 16) {
+        this.message = "Довжна пароля повинна бути не більше 16 символів";
+        alert("Довжна пароля повинна бути не більше 16 символів");
+        return false;
+      } else return true;
+    },
+
+    validName() {
+      if (this.userName.length < 3 || this.userName.length > 25) {
+        this.message = "Імя користувача повинно містити від 3 до 25 символів";
+        alert("Імя користувача повинно містити від 3 до 25 символів");
+        return false;
+      } else return true;
+    },
+
+    validEmail() {
+      const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      if (!this.email.match(pattern)) {
+        this.message = "Email введено не вірно";
+        alert("Email введено не вірно");
+        return false;
+      } else return true;
     },
   },
 
