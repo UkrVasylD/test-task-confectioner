@@ -18,36 +18,35 @@ module.exports.getList = function (req, res) {
     };
   }
   if (searchObj.title) {
-    searchObj.title =  { $regex: searchObj.title}
+    searchObj.title = { $regex: searchObj.title };
   }
-  PieModel.find(searchObj).
-  // find({ title: { $regex: searchObj.title} }).
-  limit(6).
-  sort({price:searchObj.sortPrice}).
-  sort({title:searchObj.sortTitle}). 
-    exec(
-      function (err, pie) {
-    if (err)
-      return sendJSONResponse(res, 500, {
-        success: false,
-        err: { msg: "Fetch faild!" },
-      });
-    // Converted photo with static folder public to base64
-    pie.forEach((item) => {
-      let path = req.imagesDir + item.photo;
-      var photoBase64 = imgToBase64(path);
+  PieModel.find(searchObj)
+    // find({ title: { $regex: searchObj.title} }).
+    .limit(6)
+    .select("-description")
+    .sort({ price: searchObj.sortPrice })
+    .sort({ title: searchObj.sortTitle })
+    .exec(function (err, pie) {
+      if (err)
+        return sendJSONResponse(res, 500, {
+          success: false,
+          err: { msg: "Fetch faild!" },
+        });
+      // Converted photo with static folder public to base64
+      pie.forEach((item) => {
+        let path = req.imagesDir + item.photo;
+        var photoBase64 = imgToBase64(path);
 
-      function imgToBase64(url) {
-        var dataurl = fs.readFileSync(url);
-        return dataurl.toString("base64");
-      }
-      let base64 = "data:" + mineType.lookup(path) + ";base64," + photoBase64;
-      item.photo = base64;
-    }
-    )
-    
-    sendJSONResponse(res, 200, { success: true, data: pie });
-  });
+        function imgToBase64(url) {
+          var dataurl = fs.readFileSync(url);
+          return dataurl.toString("base64");
+        }
+        let base64 = "data:" + mineType.lookup(path) + ";base64," + photoBase64;
+        item.photo = base64;
+      });
+
+      sendJSONResponse(res, 200, { success: true, data: pie });
+    });
 };
 
 module.exports.add = function (req, res, next) {
@@ -91,16 +90,23 @@ module.exports.add = function (req, res, next) {
 };
 
 module.exports.delete = function (req, res) {
-  PieModel.findByIdAndDelete(req.body.id, function (err) {
-    if (err) {
-      sendJSONResponse(res, 500, {
-        success: false,
-        err: { msg: "Delete faild!" },
-      });
-      return;
-    }
-    sendJSONResponse(res, 200, { success: true });
-  });
+  if (req.body && req.body.id) {
+    PieModel.findByIdAndDelete(req.body.id, function (err) {
+      if (err) {
+        sendJSONResponse(res, 500, {
+          success: false,
+          err: { msg: "Delete faild!" },
+        });
+        return;
+      }
+      sendJSONResponse(res, 204, { success: true });
+    });
+  } else {
+    sendJSONResponse(res, 404, {
+      success: false,
+      massage: "No product id in request!",
+    });
+  }
 };
 
 module.exports.update = function (req, res, next) {
@@ -132,11 +138,10 @@ module.exports.update = function (req, res, next) {
   form.on("end", function (d) {
     num++;
     if (num == 1) {
-      //Збереження моделі і відключення від бази даних
       PieModel.findByIdAndUpdate(
         req.body.id,
         req.body.product,
-        { new: true }, 
+        { new: true },
         function (err) {
           // mongoose.disconnect()
           if (err) {
@@ -155,24 +160,37 @@ module.exports.update = function (req, res, next) {
 };
 
 module.exports.getById = function (req, res) {
-  PieModel.findById(req.params.id, function (err, searchProduct) {
-    if (err) {
-      sendJSONResponse(res, 500, {
-        success: false,
-        err: { msg: "Find product faild!" },
-      });
-      return;
-    }
-    // Converted photo with static folder public to base64
-    let path = req.imagesDir + searchProduct.photo;
-    var photoBase64 = imgToBase64(path);
+  if (req.params && req.params.id) {
+    PieModel.findById(req.params.id, function (err, searchProduct) {
+      if (!searchProduct) {
+        sendJSONResponse(res, 404, {
+          success: false,
+          massage: "Product not found!",
+        });
+        return;
+      } else if (err) {
+        sendJSONResponse(res, 500, {
+          success: false,
+          err: { msg: "Find product faild!" },
+        });
+        return;
+      }
+      // Converted photo with static folder public to base64
+      let path = req.imagesDir + searchProduct.photo;
+      var photoBase64 = imgToBase64(path);
 
-    function imgToBase64(url) {
-      var dataurl = fs.readFileSync(url);
-      return dataurl.toString("base64");
-    }
-    let base64 = "data:" + mineType.lookup(path) + ";base64," + photoBase64;
-    searchProduct.photo = base64;
-    sendJSONResponse(res, 200, { success: true, data: searchProduct });
-  });
+      function imgToBase64(url) {
+        var dataurl = fs.readFileSync(url);
+        return dataurl.toString("base64");
+      }
+      let base64 = "data:" + mineType.lookup(path) + ";base64," + photoBase64;
+      searchProduct.photo = base64;
+      sendJSONResponse(res, 200, { success: true, data: searchProduct });
+    });
+  } else {
+    sendJSONResponse(res, 404, {
+      success: false,
+      massage: "No product id in request!",
+    });
+  }
 };
